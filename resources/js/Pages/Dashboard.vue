@@ -98,7 +98,7 @@ function postDailyTime(name) {
                     class="rounded-xl border border-gray-100 bg-white p-5 shadow-sm"
                 >
                     <h3
-                        class="text-sm font-semibold uppercase tracking-wide text-gray-500"
+                        class="text-base font-bold uppercase tracking-wide text-gray-700"
                     >
                         Today's time
                     </h3>
@@ -112,7 +112,7 @@ function postDailyTime(name) {
                         <button
                             type="button"
                             :disabled="!!todayLog?.clock_in_at"
-                            class="rounded-md bg-indigo-600 px-3 py-2 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-40"
+                            class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-40"
                             @click="postDailyTime('dashboard.daily-time.start-shift')"
                         >
                             Start day
@@ -124,7 +124,7 @@ function postDailyTime(name) {
                                     || !!todayLog?.clock_out_at
                                     || onBreak
                             "
-                            class="rounded-md bg-gray-800 px-3 py-2 text-xs font-semibold text-white shadow-sm hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-40"
+                            class="rounded-md bg-gray-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-40"
                             @click="postDailyTime('dashboard.daily-time.end-shift')"
                         >
                             End day
@@ -136,7 +136,7 @@ function postDailyTime(name) {
                                     || onBreak
                                     || !!todayLog?.break_start_at
                             "
-                            class="rounded-md border border-amber-300 bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-900 hover:bg-amber-100 disabled:cursor-not-allowed disabled:opacity-40"
+                            class="rounded-md border border-amber-300 bg-amber-50 px-3 py-2 text-sm font-semibold text-amber-900 hover:bg-amber-100 disabled:cursor-not-allowed disabled:opacity-40"
                             @click="postDailyTime('dashboard.daily-time.start-break')"
                         >
                             Start break
@@ -144,14 +144,14 @@ function postDailyTime(name) {
                         <button
                             type="button"
                             :disabled="!onBreak"
-                            class="rounded-md border border-amber-300 bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-900 hover:bg-amber-100 disabled:cursor-not-allowed disabled:opacity-40"
+                            class="rounded-md border border-amber-300 bg-amber-50 px-3 py-2 text-sm font-semibold text-amber-900 hover:bg-amber-100 disabled:cursor-not-allowed disabled:opacity-40"
                             @click="postDailyTime('dashboard.daily-time.end-break')"
                         >
                             End break
                         </button>
                         <button
                             type="button"
-                            class="rounded-md border border-gray-300 px-3 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50"
+                            class="rounded-md border border-gray-300 px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50"
                             @click="postDailyTime('dashboard.daily-time.reset')"
                         >
                             Reset today
@@ -159,38 +159,52 @@ function postDailyTime(name) {
                     </div>
 
                     <div
+                        v-if="todayLog?.clock_in_at && elapsedLabel"
+                        class="mt-5 rounded-xl border-2 border-indigo-200 bg-gradient-to-br from-indigo-50 to-white p-5 shadow-sm"
+                    >
+                        <p
+                            class="text-xs font-bold uppercase tracking-wider text-indigo-600"
+                        >
+                            {{
+                                todayLog.clock_out_at
+                                    ? 'Total time today'
+                                    : 'Running timer'
+                            }}
+                        </p>
+                        <p
+                            class="mt-2 font-mono text-3xl font-bold tabular-nums tracking-tight text-indigo-950 sm:text-4xl"
+                        >
+                            {{ elapsedLabel }}
+                        </p>
+                    </div>
+
+                    <div
                         v-if="todayLog?.clock_in_at"
                         class="mt-4 rounded-lg border border-gray-200 bg-gray-50 p-3 text-xs text-gray-700"
                     >
                         <p>
-                            <span class="font-medium">Clock in:</span>
-                            {{ new Date(todayLog.clock_in_at).toLocaleString() }}
+                            <span class="font-semibold text-gray-800">Clock in:</span>
+                            <span class="ml-1 font-mono font-semibold text-gray-900">{{
+                                new Date(todayLog.clock_in_at).toLocaleString()
+                            }}</span>
                         </p>
                         <p v-if="todayLog.clock_out_at">
-                            <span class="font-medium">Clock out:</span>
-                            {{ new Date(todayLog.clock_out_at).toLocaleString() }}
+                            <span class="font-semibold text-gray-800">Clock out:</span>
+                            <span class="ml-1 font-mono font-semibold text-gray-900">{{
+                                new Date(todayLog.clock_out_at).toLocaleString()
+                            }}</span>
                         </p>
                         <p v-if="todayLog.break_start_at">
-                            <span class="font-medium">Break start:</span>
-                            {{
+                            <span class="font-semibold text-gray-800">Break start:</span>
+                            <span class="ml-1 font-mono font-semibold text-gray-900">{{
                                 new Date(todayLog.break_start_at).toLocaleString()
-                            }}
+                            }}</span>
                         </p>
                         <p v-if="todayLog.break_end_at">
-                            <span class="font-medium">Break end:</span>
-                            {{ new Date(todayLog.break_end_at).toLocaleString() }}
-                        </p>
-                        <p
-                            v-if="elapsedLabel && !todayLog.clock_out_at"
-                            class="mt-2 font-mono text-sm text-indigo-700"
-                        >
-                            Elapsed: {{ elapsedLabel }}
-                        </p>
-                        <p
-                            v-else-if="elapsedLabel && todayLog.clock_out_at"
-                            class="mt-2 font-mono text-sm text-gray-600"
-                        >
-                            Total span: {{ elapsedLabel }}
+                            <span class="font-semibold text-gray-800">Break end:</span>
+                            <span class="ml-1 font-mono font-semibold text-gray-900">{{
+                                new Date(todayLog.break_end_at).toLocaleString()
+                            }}</span>
                         </p>
                     </div>
                 </div>
