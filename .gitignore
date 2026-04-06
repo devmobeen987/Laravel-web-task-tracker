@@ -23,3 +23,5 @@ _ide_helper.php
 Homestead.json
 Homestead.yaml
 Thumbs.db
+temp_auto_push.bat
+temp_interactive_push.bat
